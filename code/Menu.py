@@ -1,39 +1,49 @@
 import pygame
+from code.Const import WINDOW_WIDTH
 
 
 class Menu:
 
     def __init__(self, window):
+
         self.window = window
-        self.running = True
 
-    def run(self):
+        self.options = [
+            "NEW GAME 1P",
+            "NEW GAME 2P (COOPERATIVE)",
+            "NEW GAME 2P (COMPETITIVE)",
+            "SCORE",
+            "EXIT"
+        ]
 
-        while self.running:
+        self.selected = 0
 
-            for event in pygame.event.get():
+    def move_up(self):
+        self.selected -= 1
+        if self.selected < 0:
+            self.selected = len(self.options) - 1
 
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-                if event.type == pygame.KEYDOWN:
-
-                    if event.key == pygame.K_RETURN:
-                        self.running = False
-
-            self.draw()
+    def move_down(self):
+        self.selected += 1
+        if self.selected >= len(self.options):
+            self.selected = 0
 
     def draw(self):
 
-        self.window.fill((5, 5, 30))
+        font = pygame.font.SysFont(None, 50)
 
-        font_title = pygame.font.SysFont(None, 60)
-        font_text = pygame.font.SysFont(None, 30)
+        y = 220
 
-        title = font_title.render("SPACE DEFENDER", True, (255,255,255))
-        text = font_text.render("Pressione ENTER para jogar", True, (200,200,200))
+        for i, option in enumerate(self.options):
 
-        self.window.blit(title, (180,150))
-        self.window.blit(text, (200,250))
+            color = (255, 255, 0) if i == self.selected else (255, 255, 255)
+
+            text = font.render(option, True, color)
+
+            x = WINDOW_WIDTH // 2 - text.get_width() // 2
+
+            self.window.blit(text, (x, y))
+
+            y += 60
 
         pygame.display.update()
